@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1 
+kind: Ingress 
+metadata: 
+  name: marlon-echo-app-ingress 
+  namespace: marlon-eks-activity 
+  annotations: 
+    cert-manager.io/cluster-issuer: "letsencrypt-prod" 
+    external-dns.alpha.kubernetes.io/hostname: "marlon-echoapp.sctp-sandbox.com" # Route53 Record 
+spec: 
+  ingressClassName: nginx 
+  tls: 
+    - hosts: 
+        - "marlon-echoapp.sctp-sandbox.com" # Route53 Record 
+      secretName: marlon-sctp-tls
+  rules: 
+  - host: "marlon-echoapp.sctp-sandbox.com" # Route53 Record 
+    http: 
+      paths: 
+      - path: / 
+        pathType: Prefix 
+        backend: 
+          service: 
+            name: marlon-echo-service 
+            port: 
+              number: 80
+  
